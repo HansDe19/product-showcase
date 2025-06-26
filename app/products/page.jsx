@@ -1,13 +1,21 @@
 import React from 'react';
 
-async function getProduct(id) {
-  const res = await fetch(`https://fakestoreapi.com/products/${id}`);
-  if (!res.ok) throw new Error('Product not found');
-  return res.json();
-}
+const getProducts = async () => {
+  try {
+    const res = await fetch("https://fakestoreapi.com/products", { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error("Failed to fetch products");
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Fetch error:", error);
+    return [];
+  }
+};
 
 export default async function ProductDetail({ params }) {
-  const product = await getProduct(params.slug);
+  const product = await getProducts(params.slug);
 
   return (
     <div style={{ padding: '2rem' }}>
